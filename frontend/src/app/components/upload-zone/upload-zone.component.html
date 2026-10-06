@@ -1,0 +1,96 @@
+<section class="upload-section">
+  <div class="intro-headline">
+    <h2 class="hero-title">Extract & Perfect Your <span class="gradient-text">Brand Colors</span></h2>
+    <p class="hero-desc">
+      Upload your brand logo (PNG or JPG). Our intelligent color engine filters transparent backgrounds, 
+      clusters dominant colors with K-Means, and leverages AI to identify your true <strong>Primary</strong>, 
+      <strong>Secondary</strong>, and <strong>Accent</strong> roles.
+    </p>
+  </div>
+
+  <!-- Drag and Drop Box -->
+  <div 
+    class="drop-zone glass-panel"
+    [class.drag-over]="isDragging"
+    [class.analyzing]="isAnalyzing"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+  >
+    <input 
+      #fileInput
+      type="file" 
+      class="file-input-hidden" 
+      accept="image/png, image/jpeg, image/jpg, image/webp, image/svg+xml"
+      (change)="onFileInputChange($event)"
+      [disabled]="isAnalyzing"
+    />
+
+    <div class="drop-zone-content">
+      <div class="upload-icon-pulse">
+        <svg class="cloud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" stroke-linecap="round"/>
+          <path d="M12 12v9" stroke-linecap="round"/>
+          <path d="m16 16-4-4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="drop-text-area">
+        <h3 class="drop-title">Drag & drop your logo here</h3>
+        <p class="drop-subtitle">Supports transparent PNG, high-res JPG, JPEG, and WEBP (up to 10MB)</p>
+      </div>
+
+      <button 
+        type="button" 
+        class="btn-browse" 
+        (click)="fileInput.click()"
+        [disabled]="isAnalyzing"
+      >
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+        <span>Browse Logo Image</span>
+      </button>
+
+      <div class="transparency-note">
+        <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        <span>Transparent PNG alpha channel is automatically isolated to prevent background bias</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="uploadError" class="error-banner animate-fade-in">
+    <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <span>{{ uploadError }}</span>
+  </div>
+
+  <!-- Quick Sample Logos -->
+  <div class="sample-logos-area">
+    <div class="sample-header">
+      <span class="sample-label">Or test immediately with a sample logo:</span>
+    </div>
+    <div class="sample-grid">
+      <div 
+        *ngFor="let sample of colorService.sampleLogos"
+        class="sample-card glass-panel"
+        (click)="selectSampleLogo(sample)"
+      >
+        <div class="sample-preview" [innerHTML]="sanitizeSvg(sample.svgContent)"></div>
+        <div class="sample-meta">
+          <span class="sample-name">{{ sample.name }}</span>
+          <span class="sample-cat">{{ sample.category }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

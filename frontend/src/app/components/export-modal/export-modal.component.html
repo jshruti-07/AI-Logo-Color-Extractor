@@ -1,0 +1,107 @@
+<div class="modal-backdrop animate-fade-in" (click)="onBackdropClick($event)">
+  <div class="modal-card glass-panel">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="header-left">
+        <div class="header-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="modal-title">Export Color Palette</h3>
+          <p class="modal-subtitle">Ready-to-use variables and tokens for your codebase</p>
+        </div>
+      </div>
+
+      <button type="button" class="btn-close" (click)="close.emit()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Tab Selector -->
+    <div class="export-tabs">
+      <button 
+        type="button" 
+        class="tab-btn" 
+        [class.active]="activeTab === 'css'"
+        (click)="activeTab = 'css'"
+      >
+        CSS Variables
+      </button>
+      <button 
+        type="button" 
+        class="tab-btn" 
+        [class.active]="activeTab === 'json'"
+        (click)="activeTab = 'json'"
+      >
+        JSON Tokens
+      </button>
+      <button 
+        type="button" 
+        class="tab-btn" 
+        [class.active]="activeTab === 'scss'"
+        (click)="activeTab = 'scss'"
+      >
+        SCSS
+      </button>
+      <button 
+        type="button" 
+        class="tab-btn" 
+        [class.active]="activeTab === 'tailwind'"
+        (click)="activeTab = 'tailwind'"
+      >
+        Tailwind
+      </button>
+    </div>
+
+    <!-- Code Display Area -->
+    <div class="code-area-container">
+      <pre class="code-block font-mono"><code>{{ activeContent }}</code></pre>
+    </div>
+
+    <!-- Modal Actions -->
+    <div class="modal-footer">
+      <button type="button" class="btn-secondary" (click)="downloadSvgPalette()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+        <span>Download SVG Card</span>
+      </button>
+
+      <div class="footer-right-actions">
+        <button 
+          type="button" 
+          class="btn-copy-code"
+          (click)="copyActiveContent()"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <span>{{ copiedTab === activeTab ? 'Copied to Clipboard!' : 'Copy Code' }}</span>
+        </button>
+
+        <button 
+          type="button" 
+          class="btn-download-file"
+          (click)="downloadActiveContent()"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>Download File</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

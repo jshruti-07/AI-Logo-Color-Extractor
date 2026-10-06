@@ -1,0 +1,53 @@
+<div class="candidate-palette-section glass-panel">
+  <div class="section-header">
+    <div class="title-wrap">
+      <h3 class="section-title">Clustered Candidate Spectrum</h3>
+      <p class="section-subtitle">
+        {{ candidates.length }} distinct candidate colors generated via K-Means clustering algorithm. 
+        AI reviewed these exact candidates to select your primary brand trio.
+      </p>
+    </div>
+  </div>
+
+  <!-- Spectrum Bar Visualizer -->
+  <div class="spectrum-bar">
+    <div 
+      *ngFor="let cand of candidates"
+      class="spectrum-slice"
+      [style.width.%]="cand.percentage"
+      [style.backgroundColor]="cand.hex"
+      [title]="cand.name + ' (' + cand.hex + ' - ' + cand.percentage + '%)'"
+      (click)="copyCandidateHex(cand)"
+    ></div>
+  </div>
+
+  <!-- Candidate Grid -->
+  <div class="candidate-grid">
+    <div 
+      *ngFor="let cand of candidates"
+      class="candidate-chip"
+      [class.selected-role]="cand.is_selected_role"
+      (click)="copyCandidateHex(cand)"
+      title="Click to copy HEX"
+    >
+      <div class="chip-swatch" [style.backgroundColor]="cand.hex">
+        <span *ngIf="cand.is_selected_role" class="role-indicator" [ngClass]="'role-' + cand.is_selected_role">
+          {{ cand.is_selected_role[0].toUpperCase() }}
+        </span>
+      </div>
+
+      <div class="chip-details">
+        <div class="chip-name-row">
+          <span class="chip-name">{{ cand.name }}</span>
+          <span class="chip-pct">{{ cand.percentage }}%</span>
+        </div>
+        <div class="chip-sub-row">
+          <span class="chip-hex font-mono">{{ cand.hex }}</span>
+          <span *ngIf="cand.is_selected_role" class="selected-pill" [ngClass]="'pill-' + cand.is_selected_role">
+            {{ cand.is_selected_role }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

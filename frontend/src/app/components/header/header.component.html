@@ -1,0 +1,31 @@
+<header class="app-header">
+  <div class="header-container">
+    <div class="brand-logo-area">
+      <div class="logo-icon-wrap">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" stroke="#6366F1" stroke-dasharray="40 10"/>
+          <path d="M12 2a10 10 0 0 1 10 10" stroke="#06B6D4" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="4" fill="#EC4899" stroke="none"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h1 class="brand-title">AI Logo <span class="gradient-text">Color Extractor</span></h1>
+        <p class="brand-subtitle">Smart brand palette extraction with K-Means clustering & OpenAI semantic reasoning</p>
+      </div>
+    </div>
+
+    <div class="header-badges">
+      <div class="status-badge" [class.online]="isBackendHealthy" [class.offline]="!isBackendHealthy">
+        <span class="pulse-dot"></span>
+        <span class="status-text">{{ isBackendHealthy ? 'Backend Ready' : 'Backend Offline' }}</span>
+      </div>
+
+      <div class="status-badge ai-badge" [class.active]="isOpenAiConnected">
+        <svg class="sparkle-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/>
+        </svg>
+        <span>{{ isOpenAiConnected ? 'OpenAI GPT-4o' : 'AI Hybrid Engine' }}</span>
+      </div>
+    </div>
+  </div>
+</header>

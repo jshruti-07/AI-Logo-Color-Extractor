@@ -1,0 +1,246 @@
+.live-preview-section {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  .preview-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .preview-subtitle {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+  }
+}
+
+.btn-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+
+  .theme-icon {
+    width: 15px;
+    height: 15px;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.mockup-canvas {
+  border-radius: var(--radius-md);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-subtle);
+
+  &.canvas-dark {
+    background: #090D16;
+    color: #F8FAFC;
+
+    .mock-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  &.canvas-light {
+    background: #F8FAFC;
+    color: #0F172A;
+
+    .mock-hero-heading {
+      color: #0F172A !important;
+    }
+
+    .mock-hero-text {
+      color: #475569 !important;
+    }
+
+    .mock-nav-link {
+      color: #475569 !important;
+    }
+
+    .mock-brand-name {
+      color: #0F172A !important;
+    }
+
+    .mock-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+      .mock-card-title {
+        color: #0F172A !important;
+      }
+
+      .mock-card-desc {
+        color: #64748B !important;
+      }
+    }
+  }
+}
+
+.mock-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  .mock-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.05rem;
+
+    .mock-logo-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+    }
+  }
+
+  .mock-nav-links {
+    display: flex;
+    gap: 20px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .mock-btn-sm {
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+}
+
+.mock-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  max-width: 640px;
+  margin: 0 auto;
+
+  .mock-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    border: 1px solid;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+
+    .mock-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+  }
+
+  .mock-hero-heading {
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+
+  .mock-hero-text {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .mock-cta-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 6px;
+  }
+
+  .mock-btn-hero {
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+
+    &.secondary-btn {
+      border: 1px solid;
+      background: transparent;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+}
+
+.mock-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.mock-card {
+  padding: 18px;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .mock-card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mock-card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  .mock-card-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+
+  .mock-pill {
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+  }
+}

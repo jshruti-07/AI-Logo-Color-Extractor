@@ -1,0 +1,90 @@
+<div class="color-card glass-panel" [ngClass]="'card-' + roleType">
+  <!-- Role Header -->
+  <div class="card-header">
+    <span class="role-badge" [ngClass]="getBadgeClass()">{{ roleTitle }}</span>
+    <span *ngIf="color.percentage" class="percentage-pill">{{ color.percentage }}%</span>
+  </div>
+
+  <!-- Color Swatch Area -->
+  <div 
+    class="color-swatch"
+    [style.backgroundColor]="color.hex"
+    [style.color]="color.accessibility?.preferred_text_color || '#FFFFFF'"
+    (click)="copyValue(color.hex, 'HEX')"
+    title="Click to copy HEX"
+  >
+    <div class="swatch-content">
+      <span class="swatch-hex-overlay">{{ color.hex }}</span>
+      <span class="swatch-hint">Click to copy</span>
+    </div>
+    
+    <div class="swatch-glow" [style.backgroundColor]="color.hex"></div>
+  </div>
+
+  <!-- Color Info Body -->
+  <div class="card-body">
+    <div class="color-title-wrap">
+      <h3 class="color-name">{{ color.name }}</h3>
+      <p *ngIf="color.reasoning" class="color-reasoning">{{ color.reasoning }}</p>
+    </div>
+
+    <!-- Color Values List -->
+    <div class="values-list">
+      <!-- HEX -->
+      <div class="value-row">
+        <span class="format-label">HEX</span>
+        <span class="format-value font-mono">{{ color.hex }}</span>
+        <button 
+          type="button" 
+          class="btn-copy-mini" 
+          (click)="copyValue(color.hex, 'HEX')"
+          [class.copied]="copiedField === 'HEX'"
+        >
+          {{ copiedField === 'HEX' ? 'Copied!' : 'Copy' }}
+        </button>
+      </div>
+
+      <!-- RGB -->
+      <div class="value-row">
+        <span class="format-label">RGB</span>
+        <span class="format-value font-mono">{{ color.rgb }}</span>
+        <button 
+          type="button" 
+          class="btn-copy-mini" 
+          (click)="copyValue(color.rgb, 'RGB')"
+          [class.copied]="copiedField === 'RGB'"
+        >
+          {{ copiedField === 'RGB' ? 'Copied!' : 'Copy' }}
+        </button>
+      </div>
+
+      <!-- HSL -->
+      <div class="value-row">
+        <span class="format-label">HSL</span>
+        <span class="format-value font-mono">{{ color.hsl }}</span>
+        <button 
+          type="button" 
+          class="btn-copy-mini" 
+          (click)="copyValue(color.hsl, 'HSL')"
+          [class.copied]="copiedField === 'HSL'"
+        >
+          {{ copiedField === 'HSL' ? 'Copied!' : 'Copy' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Copy HEX Button -->
+    <button 
+      type="button" 
+      class="btn-copy-hex-main"
+      (click)="copyValue(color.hex, 'HEX')"
+      [style.borderColor]="color.hex"
+    >
+      <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+      </svg>
+      <span>{{ copiedField === 'HEX' ? 'HEX Copied!' : 'Copy HEX' }}</span>
+    </button>
+  </div>
+</div>

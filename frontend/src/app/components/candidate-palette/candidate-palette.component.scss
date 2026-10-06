@@ -1,0 +1,164 @@
+.candidate-palette-section {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section-header {
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .section-subtitle {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+  }
+}
+
+.spectrum-bar {
+  display: flex;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-subtle);
+
+  .spectrum-slice {
+    height: 100%;
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease;
+    min-width: 4px;
+
+    &:hover {
+      transform: scaleY(1.3);
+      filter: brightness(1.2);
+      z-index: 2;
+    }
+  }
+}
+
+.candidate-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.candidate-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(30, 41, 59, 0.7);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+
+  &.selected-role {
+    border-color: rgba(99, 102, 241, 0.4);
+    background: rgba(99, 102, 241, 0.08);
+  }
+
+  .chip-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    position: relative;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .role-indicator {
+      font-size: 0.68rem;
+      font-weight: 800;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      background: rgba(0, 0, 0, 0.7);
+
+      &.role-primary { color: #818CF8; }
+      &.role-secondary { color: #22D3EE; }
+      &.role-accent { color: #F472B6; }
+    }
+  }
+
+  .chip-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    .chip-name-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+
+      .chip-name {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .chip-pct {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        font-weight: 500;
+      }
+    }
+
+    .chip-sub-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2px;
+
+      .chip-hex {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+      }
+
+      .selected-pill {
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 1px 6px;
+        border-radius: 4px;
+
+        &.pill-primary {
+          background: rgba(99, 102, 241, 0.25);
+          color: #A5B4FC;
+        }
+
+        &.pill-secondary {
+          background: rgba(6, 182, 212, 0.25);
+          color: #67E8F9;
+        }
+
+        &.pill-accent {
+          background: rgba(236, 72, 153, 0.25);
+          color: #F472B6;
+        }
+      }
+    }
+  }
+}
