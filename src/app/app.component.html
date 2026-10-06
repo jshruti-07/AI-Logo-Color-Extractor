@@ -1,0 +1,243 @@
+<div class="app-layout">
+  <!-- Top Navigation Header -->
+  <header class="app-navbar">
+    <div class="navbar-container">
+      <div class="brand-identity">
+        <div class="brand-logo-mark">
+          <span class="dot dot-primary"></span>
+          <span class="dot dot-secondary"></span>
+          <span class="dot dot-accent"></span>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">AI Logo Color Extractor</h1>
+          <span class="brand-tag">Brand Intelligence</span>
+        </div>
+      </div>
+
+      <div class="navbar-actions">
+        <!-- Status Indicators -->
+        <div class="status-indicators">
+          <span class="status-pill" [class.status-online]="backendOnline" [class.status-offline]="!backendOnline" title="Backend FastAPI status">
+            <span class="status-dot"></span>
+            <span>{{ backendOnline ? 'API Connected' : 'API Offline' }}</span>
+          </span>
+
+          <span class="status-pill" [class.status-online]="mysqlConnected" [class.status-offline]="!mysqlConnected" *ngIf="backendOnline" [title]="mysqlConnected ? 'MySQL Connected: ' + mysqlDatabase : 'MySQL Disconnected'">
+            <span class="status-dot"></span>
+            <span>{{ mysqlConnected ? 'MySQL Connected' : 'MySQL Offline' }}</span>
+          </span>
+
+          <span class="status-pill" [class.status-online]="llmConfigured" [class.status-warning]="!llmConfigured" *ngIf="backendOnline">
+            <span class="status-dot"></span>
+            <span>{{ llmConfigured ? 'OpenAI Ready' : 'API Key Required' }}</span>
+          </span>
+        </div>
+
+        <!-- History Toggle Button -->
+        <button
+          type="button"
+          class="btn-history-toggle"
+          (click)="toggleHistoryDrawer()"
+          [class.active]="showHistoryDrawer"
+          title="View saved extractions in MySQL"
+        >
+          <svg class="history-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+          </svg>
+          <span>History</span>
+          <span class="history-badge" *ngIf="history.length > 0">{{ history.length }}</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Global Alert Notice if OpenAI Key is missing or Error occurred -->
+  <div class="notification-container" *ngIf="errorMessage || (!llmConfigured && backendOnline)">
+    <!-- Missing OpenAI Key Banner -->
+    <div class="alert-box alert-warning" *ngIf="!llmConfigured && backendOnline && !errorMessage">
+      <div class="alert-content">
+        <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+        </svg>
+        <span>
+          <strong>OpenAI Key Required:</strong> To enable AI classification, add your <code>OPENAI_API_KEY</code> to <code>backend/.env</code>.
+        </span>
+      </div>
+    </div>
+
+    <!-- Error Banner -->
+    <div class="alert-box alert-error" *ngIf="errorMessage">
+      <div class="alert-content">
+        <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+        </svg>
+        <span>{{ errorMessage }}</span>
+      </div>
+      <button type="button" class="btn-dismiss" (click)="dismissError()" aria-label="Dismiss error">✕</button>
+    </div>
+  </div>
+
+  <!-- Main View Area -->
+  <main class="main-content">
+    <!-- State 1: Upload View -->
+    <section *ngIf="currentState === 'upload'" class="view-section upload-view" aria-labelledby="hero-heading">
+      <div class="hero-header">
+        <div class="hero-badge">
+          <svg class="badge-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z" clip-rule="evenodd" />
+          </svg>
+          <span>Computer Vision & AI Color Pipeline • MySQL Backend</span>
+        </div>
+        <h2 id="hero-heading" class="hero-title">AI Logo Color Extractor</h2>
+        <p class="hero-subtitle">
+          Upload a logo to extract genuine brand colors, classify roles via AI, and auto-persist to MySQL.
+        </p>
+      </div>
+
+      <app-logo-upload
+        (fileSelected)="onFileSelected($event)"
+        (errorOccurred)="onUploadError($event)"
+      ></app-logo-upload>
+
+      <!-- Architecture Explainer Strip -->
+      <div class="pipeline-strip">
+        <div class="pipeline-step">
+          <span class="step-num">01</span>
+          <span class="step-title">Pixel Preprocessing</span>
+          <span class="step-desc">Filters transparency & normalizes resolution</span>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">
+          <span class="step-num">02</span>
+          <span class="step-title">K-Means Clustering</span>
+          <span class="step-desc">Extracts true candidate color frequencies</span>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">
+          <span class="step-num">03</span>
+          <span class="step-title">Perceptual LAB Filter</span>
+          <span class="step-desc">Eliminates near-duplicate color shades</span>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">
+          <span class="step-num">04</span>
+          <span class="step-title">OpenAI Classification</span>
+          <span class="step-desc">Selects Primary, Secondary & Accent</span>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">
+          <span class="step-num">05</span>
+          <span class="step-title">MySQL Persistence</span>
+          <span class="step-desc">Stores palette history & metadata</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- State 2: Preview & Analyzing View -->
+    <section *ngIf="currentState === 'preview'" class="view-section preview-view">
+      <app-logo-preview
+        [file]="selectedFile"
+        [previewUrl]="previewUrl"
+        [isAnalyzing]="isAnalyzing"
+        [steps]="analysisSteps"
+        (changeLogo)="changeLogo()"
+        (analyzeLogo)="startAnalysis()"
+      ></app-logo-preview>
+    </section>
+
+    <!-- State 3: Brand Palette Results View -->
+    <section *ngIf="currentState === 'result' && palette" class="view-section result-view">
+      <div class="loaded-palette-banner" *ngIf="currentLoadedFilename">
+        <span class="banner-tag">Current Palette:</span>
+        <span class="banner-filename">{{ currentLoadedFilename }}</span>
+      </div>
+      <app-color-palette
+        [palette]="palette"
+        [logoPreviewUrl]="previewUrl"
+        (reset)="changeLogo()"
+      ></app-color-palette>
+    </section>
+  </main>
+
+  <!-- MySQL Saved History Drawer / Modal -->
+  <aside class="history-drawer-overlay" *ngIf="showHistoryDrawer" (click)="closeHistoryDrawer()">
+    <div class="history-drawer" (click)="$event.stopPropagation()">
+      <div class="history-drawer-header">
+        <div class="history-drawer-title-group">
+          <svg class="history-title-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+          </svg>
+          <h3 class="history-drawer-title">MySQL Extraction History</h3>
+        </div>
+        <button type="button" class="btn-close-drawer" (click)="closeHistoryDrawer()" aria-label="Close history">✕</button>
+      </div>
+
+      <div class="history-drawer-body">
+        <div class="history-loading" *ngIf="isLoadingHistory">
+          <span class="spinner"></span>
+          <span>Loading saved palettes...</span>
+        </div>
+
+        <div class="history-empty" *ngIf="!isLoadingHistory && history.length === 0">
+          <div class="empty-icon-wrapper">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+            </svg>
+          </div>
+          <h4>No Saved Palettes Yet</h4>
+          <p>Analyzed logos will automatically be saved to your MySQL database here.</p>
+        </div>
+
+        <div class="history-list" *ngIf="!isLoadingHistory && history.length > 0">
+          <div
+            class="history-card"
+            *ngFor="let item of history"
+            (click)="loadPaletteFromHistory(item)"
+          >
+            <div class="history-card-header">
+              <span class="history-filename" [title]="item.filename">{{ item.filename }}</span>
+              <span class="history-date">{{ item.created_at ? (item.created_at | date:'short') : 'Recent' }}</span>
+            </div>
+
+            <div class="history-swatches">
+              <div class="swatch-pill" [title]="'Primary: ' + item.primary.name">
+                <span class="color-dot" [style.background-color]="item.primary.hex"></span>
+                <span class="swatch-label">{{ item.primary.hex }}</span>
+              </div>
+              <div class="swatch-pill" [title]="'Secondary: ' + item.secondary.name">
+                <span class="color-dot" [style.background-color]="item.secondary.hex"></span>
+                <span class="swatch-label">{{ item.secondary.hex }}</span>
+              </div>
+              <div class="swatch-pill" [title]="'Accent: ' + item.accent.name">
+                <span class="color-dot" [style.background-color]="item.accent.hex"></span>
+                <span class="swatch-label">{{ item.accent.hex }}</span>
+              </div>
+            </div>
+
+            <div class="history-card-actions">
+              <span class="action-hint">Click to load</span>
+              <button
+                type="button"
+                class="btn-delete-history"
+                (click)="deleteHistoryItem(item.id, $event)"
+                title="Delete from MySQL"
+                aria-label="Delete"
+              >
+                <svg viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p>AI Logo Color Extractor • Angular 22, Python FastAPI & MySQL</p>
+    </div>
+  </footer>
+</div>

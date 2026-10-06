@@ -1,0 +1,83 @@
+<div class="preview-container">
+  <div class="preview-header">
+    <div class="header-tag">Ready for Extraction</div>
+    <h3 class="preview-title">Your Logo</h3>
+  </div>
+
+  <div class="preview-canvas-wrapper">
+    <div class="checkerboard-bg">
+      <img 
+        *ngIf="previewUrl" 
+        [src]="previewUrl" 
+        [alt]="file?.name || 'Uploaded Logo'" 
+        class="preview-image"
+      />
+    </div>
+  </div>
+
+  <div class="file-details">
+    <div class="file-name" [title]="file?.name">
+      <svg class="file-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+      </svg>
+      <span>{{ file?.name }}</span>
+    </div>
+    <div class="file-badges">
+      <span class="badge">{{ fileExtension }}</span>
+      <span class="badge">{{ formattedFileSize }}</span>
+    </div>
+  </div>
+
+  <!-- Loading & Progress Stepper -->
+  <div *ngIf="isAnalyzing" class="analysis-progress-card" aria-live="polite">
+    <div class="progress-header">
+      <div class="spinner-pulse"></div>
+      <h4>Analyzing your logo...</h4>
+    </div>
+
+    <ul class="steps-list">
+      <li *ngFor="let step of steps" class="step-item" [ngClass]="step.status">
+        <span class="step-icon">
+          <ng-container [ngSwitch]="step.status">
+            <!-- Done -->
+            <svg *ngSwitchCase="'done'" class="icon-check" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            </svg>
+            <!-- Active / pulsing -->
+            <span *ngSwitchCase="'active'" class="active-dot"></span>
+            <!-- Pending -->
+            <span *ngSwitchDefault class="pending-circle"></span>
+          </ng-container>
+        </span>
+        <span class="step-text">{{ step.label }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Action Controls -->
+  <div class="action-buttons" *ngIf="!isAnalyzing">
+    <button 
+      type="button" 
+      class="btn-secondary" 
+      (click)="onChangeClicked()"
+      id="btn-change-logo"
+    >
+      <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+      </svg>
+      <span>Change Logo</span>
+    </button>
+
+    <button 
+      type="button" 
+      class="btn-primary" 
+      (click)="onAnalyzeClicked()"
+      id="btn-analyze-logo"
+    >
+      <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clip-rule="evenodd" />
+      </svg>
+      <span>Analyze Logo</span>
+    </button>
+  </div>
+</div>
