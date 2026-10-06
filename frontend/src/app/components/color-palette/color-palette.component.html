@@ -1,0 +1,172 @@
+<div class="palette-container">
+  <!-- Toast feedback for copy and export -->
+  <div class="toast-notification" *ngIf="copiedMessage" role="status" aria-live="polite">
+    <svg class="toast-icon" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+    </svg>
+    <span>{{ copiedMessage }}</span>
+  </div>
+
+  <!-- Header Area -->
+  <div class="palette-header">
+    <div class="title-meta">
+      <span class="badge-brand">AI Analysis Complete</span>
+      <h2 class="title-main">Your Brand Palette</h2>
+      <p class="subtitle-main">Intelligently selected from the logo's pixel clusters for optimal brand identity and visual harmony.</p>
+    </div>
+
+    <!-- Global Actions -->
+    <div class="global-actions">
+      <button 
+        type="button" 
+        class="btn-action btn-copy-all" 
+        (click)="copyAllColors()"
+        id="btn-copy-all"
+        title="Copy HEX values for all three colors"
+      >
+        <svg class="action-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" />
+          <path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h8a2 2 0 00-2-2H5z" />
+        </svg>
+        <span>Copy All Colors</span>
+      </button>
+
+      <!-- Export Dropdown / Buttons -->
+      <div class="export-group">
+        <button 
+          type="button" 
+          class="btn-action btn-export" 
+          (click)="exportJson()"
+          id="btn-export-json"
+          title="Download palette as JSON file"
+        >
+          <svg class="action-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+          <span>Export JSON</span>
+        </button>
+
+        <button 
+          type="button" 
+          class="btn-action btn-export" 
+          (click)="exportCss()"
+          id="btn-export-css"
+          title="Download palette as CSS variables"
+        >
+          <svg class="action-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+          <span>Export CSS</span>
+        </button>
+      </div>
+
+      <button 
+        type="button" 
+        class="btn-action btn-reset" 
+        (click)="reset.emit()"
+        id="btn-new-logo"
+      >
+        <svg class="action-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+        </svg>
+        <span>Upload Another</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 3 Large Cards Grid -->
+  <div class="cards-grid">
+    <div 
+      *ngFor="let item of roleList" 
+      class="color-card"
+      [attr.data-role]="item.role"
+      [id]="'card-' + item.role"
+    >
+      <div class="card-role-header">
+        <span class="role-badge" [ngClass]="item.role">{{ item.title }}</span>
+        <span class="role-reason" *ngIf="item.color.reason">{{ item.color.reason }}</span>
+      </div>
+
+      <!-- Large Color Block Preview -->
+      <div 
+        class="large-color-block" 
+        [style.backgroundColor]="item.color.hex"
+        [style.color]="getTextColor(item.color.hex)"
+      >
+        <div class="color-block-overlay">
+          <span class="block-hex-tag" [style.color]="getTextColor(item.color.hex)">
+            {{ item.color.hex }}
+          </span>
+          <button 
+            type="button"
+            class="block-copy-btn"
+            [style.color]="getTextColor(item.color.hex)"
+            (click)="copyValue(item.color.hex, 'Copied HEX ' + item.color.hex)"
+            aria-label="Copy HEX"
+          >
+            <svg class="copy-svg" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" />
+              <path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h8a2 2 0 00-2-2H5z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Color Name Display -->
+      <div class="color-name-row">
+        <h3 class="color-name">{{ item.color.name }}</h3>
+      </div>
+
+      <!-- Formatted Color Values Rows with Copy buttons -->
+      <div class="values-list">
+        <!-- HEX Row -->
+        <div class="value-item">
+          <div class="format-meta">
+            <span class="format-label">HEX</span>
+            <code class="format-val">{{ item.color.hex }}</code>
+          </div>
+          <button 
+            type="button" 
+            class="btn-copy-format" 
+            (click)="copyValue(item.color.hex, 'Copied HEX ' + item.color.hex)"
+            [id]="'copy-hex-' + item.role"
+          >
+            <span>Copy</span>
+          </button>
+        </div>
+
+        <!-- RGB Row -->
+        <div class="value-item">
+          <div class="format-meta">
+            <span class="format-label">RGB</span>
+            <code class="format-val">{{ item.color.rgb }}</code>
+          </div>
+          <button 
+            type="button" 
+            class="btn-copy-format" 
+            (click)="copyValue(item.color.rgb, 'Copied RGB ' + item.color.rgb)"
+            [id]="'copy-rgb-' + item.role"
+          >
+            <span>Copy</span>
+          </button>
+        </div>
+
+        <!-- HSL Row -->
+        <div class="value-item">
+          <div class="format-meta">
+            <span class="format-label">HSL</span>
+            <code class="format-val">{{ item.color.hsl }}</code>
+          </div>
+          <button 
+            type="button" 
+            class="btn-copy-format" 
+            (click)="copyValue(item.color.hsl, 'Copied HSL ' + item.color.hsl)"
+            [id]="'copy-hsl-' + item.role"
+          >
+            <span>Copy</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
